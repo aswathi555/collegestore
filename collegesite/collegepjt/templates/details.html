@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Order</title>
+    <style>
+a:link, a:visited {
+  background-color:red;
+  color: black;
+  padding: 7px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+<!--a:hover, a:active {-->
+<!--  background-color: red;-->
+<!--}-->
+
+
+</style>
+
+</head>
+<body style="background-image:url('{% static 'assets/images/store1.jpg' %}'); background-repeat: no-repeat;background-attachment: fixed;
+  background-size: cover; ">
+<form action="order" id="studentForm" method="post" data-courses-url="{% url 'ajax_load_courses' %}" >
+{% csrf_token %}
+    <div class="row"> <br></div>
+<div class="row">
+    <div class="col-md-2">
+        <label> Name : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="text" name="name" size="60"/>
+    </div>
+</div><br>
+    <div class="row">
+    <div class="col-md-2">
+        <label> Date of Birth : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="date" id="dob" name="dob">
+
+    </div>
+</div><br>
+<div class="row">
+    <div class="col-md-2">
+        <label> Age : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="text" id="age" name="age">
+    </div>
+</div><br>
+  <div class="row">
+    <div class="col-md-2">
+        <label> Gender : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="radio" name="gender"/> Male <br>
+       <input type="radio" name="gender"/> Female
+    </div>
+  </div><br>
+<div class="row">
+    <div class="col-md-2">
+        <label> Phone Number : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="text" name="country code"  value="+91" size="2"/>
+       <input type="text" name="phone" size="10"/>
+    </div></div><br>
+
+<div class="row">
+    <div class="col-md-2">
+        <label> Address : </label>
+    </div>
+    <div class="col-md-2">
+       <textarea cols="60" rows="5" value="address">
+       </textarea>
+    </div></div><br>
+<div class="row">
+    <div class="col-md-2">
+        <label> Email : </label>
+    </div>
+    <div class="col-md-2">
+       <input type="email" id="email" name="email"/>
+    </div>
+</div><br>
+
+ <div class="row">
+    <div class="col-md-2">
+        <label> Department : </label>
+    </div>
+    <div class="col-md-2">
+        <select id="id_department" >
+    <option value="select">Select</option>
+    {% for i in depart %}
+
+      <option value="{{i.id}}" >{{i.dept}}</a></option>
+            {% endfor %}
+    </select>
+    </div>
+ </div><br>
+
+<div class="row">
+    <div class="col-md-2">
+        <label> Course : </label>
+    </div>
+    <div class="col-md-2">
+        <select id="id_course" >
+       <option value="select" >--------------------</option>
+    {% for i in courses %}
+
+               <option value="{{i.id}}">{{i.course}}</option>
+
+    {% endfor %}
+
+</select>
+    </div>
+ </div><br>
+
+
+<div class="row">
+    <div class="col-md-2">
+        <label> Purpose : </label>
+    </div>
+    <div class="col-md-2">
+       <select>
+<option value="Select">Select</option>
+<option value="enquiry">For Enquiry</option>
+<option value="order">Place Order</option>
+<option value="return">Return</option>
+</select>
+    </div>
+</div><br>
+    <div class="row">
+    <div class="col-md-2">
+        <label> Materials Provide : </label>
+    </div>
+    <div class="col-md-3">
+     <input type="checkbox" name="material" >Note Book&nbsp;&nbsp;
+     <input type="checkbox" name="material" >Pen&nbsp;&nbsp;
+     <input type="checkbox" name="material" >Exam papers
+    </div>
+</div>
+    <br>
+
+&nbsp;<br>
+        &nbsp;&nbsp; &nbsp;&nbsp;
+        <input type="submit" value="Submit" class="btn btn-primary"/>&nbsp;&nbsp;
+
+    <a href="logout">Logout</a> <br><br>
+    <div class="row">
+       {% for msg in messages %}
+           <h5 style="color:blue;">{{msg}}</h5>
+       {% endfor %}
+    </div>
+</form>
+
+</body>
+</html>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_department").change(function () {
+      var url = $("#studentForm").attr("data-courses-url");
+      var departmentId = $(this).val();
+
+      $.ajax({
+        url: url,
+        data: {
+          'department': departmentId
+        },
+        success: function(data) {
+          $("#id_course").html(data);
+        }
+      });
+
+    });
+  </script>
